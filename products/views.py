@@ -13,7 +13,7 @@ def all_products(request):
 
     products = Product.objects.all()
     query = None
-    category = None
+    categories = None
     sort = None
     direction = None
 
@@ -26,11 +26,14 @@ def all_products(request):
                 sortkey = "lower_name"
                 products = products.annotate(lower_name=Lower("name"))
 
-        if "direction" in request.GET:
-            direction = request.GET["direction"]
-            if direction == "desc":
-                sortkey = f"-{sortkey}"
-            products = products.order_by(sortkey)
+            if sortkey == "category":
+                sortkey = "category__name"
+
+            if "direction" in request.GET:
+                direction = request.GET["direction"]
+                if direction == "desc":
+                    sortkey = f"-{sortkey}"
+                products = products.order_by(sortkey)
 
         if "category" in request.GET:
             category = request.GET["category"].split(",")
@@ -45,12 +48,12 @@ def all_products(request):
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             products = products.filter(queries)
 
-    current_sorting = f"{sort}.{direction}"
+    current_sorting = f"{sort}_{direction}"
 
     context = {
         "products": products,
         "search_term": query,
-        "chosen_categories": category,
+        "chosen_categories": categories,
         "current_sorting": current_sorting,
     }
 
