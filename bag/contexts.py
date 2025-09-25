@@ -38,7 +38,6 @@ def bag_contents(request):
         'free_delivery': free_delivery_delta,
         'free_delivery_amount': settings.FREE_DELIVERY_AMOUNT,
         'grand_total': grand_total,
-
     }
 
     return context
