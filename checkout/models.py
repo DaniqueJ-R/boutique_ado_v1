@@ -55,7 +55,7 @@ class Order(models.Model):
         return self.order_number
 
 
-class Orderlineitem(models.Model):
+class OrderLineItem(models.Model):
     order = models.ForeignKey(Order, null=False, related_name='lineitem', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, null=False, on_delete=models.CASCADE)
     product_size = models.CharField(max_length=2, null=True, blank=True) # XS, S, M, X, XL
@@ -70,4 +70,4 @@ class Orderlineitem(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'SKU: {self.product.sku}'
+        return f'SKU: {self.product.sku} on order {self.order.order_number}'
